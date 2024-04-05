@@ -1,0 +1,51 @@
+Silent installation for weblogic
+
+Create wls.rsp file and oraInst.loc file.
+
+
+wls.rsp:-
+[ENGINE]
+Response File Version=1.0.0.0.0
+[GENERIC]
+ORACLE_HOME=/home/ltfadmin.slms/Weblogic/Oracle/Middleware/oracle_Home
+INSTALL_TYPE=WebLogic Server
+
+
+
+oraInst.loc
+inventory_loc=/home/ltfadmin.slms/Weblogic/oraInventory
+inst_group=ltfadmin.slms
+
+Run this command
+
+java -jar fmw_14.1.1.0.0_wls_lite_generic.jar -silent -responseFile /home/ltfadmin.slms/Weblogic/product/wls.rsp -invPtrLoc /home/ltfadmin.slms/Weblogic/product/oraInst.loc
+
+Domain creation:-
+
+
+go to the path Oracle_home/oracle_common/common/bin
+
+create file 
+
+domain.py
+
+readTemplate('/home/ltfadmin.slms/Weblogic/Oracle/Middleware/oracle_Home/wlserver/common/templates/wls/wls.jar')
+cd('Servers/AdminServer')
+set('ListenAddress','')
+set('ListenPort', 7001)
+create('AdminServer','SSL')
+cd('SSL/AdminServer')
+set('Enabled', 'True')
+set('ListenPort', 7002)
+cd('/')
+cd('Security/base_domain/User/weblogic')
+cmo.setPassword('weblogic123')
+setOption('OverwriteDomain', 'true')
+writeDomain('/home/ltfadmin.slms/Weblogic/Oracle/Middleware/oracle_Home/user_projects/domains/UAT_Domain')
+closeTemplate()
+exit()
+
+run command 
+
+./wlst.sh domain.py
+
